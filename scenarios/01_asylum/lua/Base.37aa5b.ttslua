@@ -1,0 +1,4 @@
+function onLoad()
+    params = {self.guid, "bottom"}
+    Global.call("initialize_deck", params)
+end
