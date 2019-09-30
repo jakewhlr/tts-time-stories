@@ -1,0 +1,72 @@
+function onLoad()
+   deck_interactable = false
+   loaded_location = {}
+   location_positions = {}
+   location_positions[0] = 13.2929058074951
+   location_positions[1] = 8.14158821105957
+   location_positions[2] = 3.29096412658691
+   location_positions[3] = -1.55966174602509
+   location_positions[4] = -6.41028690338135
+   location_positions[5] = -11.2609148025513
+   location_positions[6] = -16.1115417480469
+   location_positions[7] = -20.9621658325195
+end
+
+function initialize_deck(params_list)
+   deck_object = getObjectFromGUID(params_list[1])
+   deck_object.interactable = deck_interactable
+
+   button_location = params_list[2]
+   location_table = {}
+   location_table["top"] = {0, 1, -2.25}
+   location_table["bottom"] = {0, 1, 2.25}
+   location_table["left"] = {-2.85, 0, 1}
+   location_table["right"] = {2.85, 0, 1}
+
+   local button= {}
+   button.width = 1000
+   button.height = 400
+   button.position = location_table[button_location]
+   button.rotation = {0, 0, 0}
+   button.click_function = "load_location"
+   deck_params = {deck_object}
+   button.params = {"load_deck", deck_params}
+   if deck_object.getDescription() != '' then
+      button.label = deck_object.getName() .. "\n" .. deck_object.getDescription()
+   else
+      button.label = deck_object.getName()
+   end
+   button.font_size = math.min(1750 / string.len(deck_object.getName()), 175)
+   button.function_owner = Global
+   deck_object.createButton(button)
+end
+
+function load_location(deck_object)
+   unload_location()
+   take_params = {}
+   take_params.position = deck_object.getPosition()
+   take_params.position.y = take_params.position.y + 2
+   clone = deck_object.clone(take_params)
+   quantity = clone.getQuantity()
+   if quantity == -1 then
+      clone.setLock(false)
+      loaded_location[0] = clone
+      clone.setPositionSmooth({location_positions[0], 3, 8.31021308898926}, false, false)
+   else
+      for index = 0, quantity - 1
+      do
+         take_params.position = {location_positions[index], 3, 8.31021308898926}
+         loaded_location[index] = clone.takeObject(take_params)
+      end
+   end
+end
+
+function unload_location()
+   for index, card in pairs(loaded_location)
+   do
+      if card != nil then
+         card.destruct()
+      end
+   end
+   loaded_location = {}
+end
