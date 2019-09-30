@@ -1,0 +1,22 @@
+function onLoad()
+   createLoadButton()
+   self.interactable = false
+end
+
+function createLoadButton()
+    local button= {}
+    button.width = 700
+    button.height = 250
+    button.position = {0, 1, 1.5}
+    button.rotation = {0, 0, 0}
+    button.click_function = "unhide"
+    button.label = self.getName()
+    button.font_size = 50
+    button.function_owner = self
+    self.createButton(button)
+end
+
+function unhide()
+   tile = getObjectFromGUID("269626")
+   tile.destruct()
+end

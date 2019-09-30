@@ -1,0 +1,46 @@
+function onLoad()
+    createLoadButton()
+    self.interactable = false
+end
+
+function load()
+    location_zone = getObjectFromGUID("419bd0")
+    board = getObjectFromGUID("f7c9f2")
+    board_position = board.getPosition()
+
+    location_zone.setPosition({board_position.x + 2.80508804321289, location_zone.getPosition().y, board_position.z - 9.22175979614258})
+    loaded_location = location_zone.getObjects()
+    for k,v in pairs(loaded_location)
+    do
+       if v.tag == "Card" then v.destruct() end
+    end
+    quantity = self.getQuantity()
+    cards = self.getObjects()
+    xPos = -11.3062009811401
+    yPos = 2.5
+    zPos = -8.30588054656982
+    take_params = {}
+    take_params.position = {xPos, yPos, zPos}
+    clone = self.clone(take_params)
+    clone.takeObject(take_params)
+    xPos = -6.14568281173706
+    for index = 2, quantity, 1
+    do
+        take_params.position = {xPos, yPos, zPos}
+        clone.takeObject(take_params)
+        xPos = xPos + 4.850622296333309
+    end
+end
+
+function createLoadButton()
+    local button= {}
+    button.width = 1000
+    button.height = 400
+    button.position = {0, -1, 2.5}
+    button.rotation = {0, 0, 180}
+    button.click_function = "load"
+    button.label = self.getName()
+    button.font_size = 135
+    button.function_owner = self
+    self.createButton(button)
+end
